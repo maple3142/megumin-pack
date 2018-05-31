@@ -2,8 +2,8 @@ const runtime = `(function(modules){
 	var cache={}
 	function require(id){
 		if(id in cache)return cache[id]
-		const fn=modules[id]
-		const module={exports:{}}
+		var fn=modules[id]
+		var module={exports:{}}
 		fn(require,module,module.exports)
 		return cache[id]=module.exports
 	}

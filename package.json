@@ -10,11 +10,14 @@
 		"babel-preset-env": "^1.7.0",
 		"babel-traverse": "^6.26.0",
 		"babylon": "^6.18.0",
-		"fs-extra": "^6.0.1"
+		"fs-extra": "^6.0.1",
+		"uglify-js": "^3.3.28"
 	},
 	"devDependencies": {},
 	"scripts": {
-		"start": "node src/index.js example/index.js dist/app.js && node dist/app.js"
+		"build": "node src/index.js example/index.js dist/app.js",
+		"start": "npm run build && node dist/app.js",
+		"minify": "uglifyjs --compress --mangle -o dist/app.min.js dist/app.js"
 	},
 	"keywords": [],
 	"author": "",
