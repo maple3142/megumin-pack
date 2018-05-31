@@ -14,7 +14,7 @@
 	},
 	"devDependencies": {},
 	"scripts": {
-		"start": "node src/index.js && node dist/app.js"
+		"start": "node src/index.js example/index.js dist/app.js && node dist/app.js"
 	},
 	"keywords": [],
 	"author": "",

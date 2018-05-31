@@ -3,8 +3,11 @@ const path = require('path')
 const createModules = require('./modules')
 const createBundle = require('./bundle')
 
-const ENTRY = path.join(__dirname, '../example/index.js')
-const DEST = path.join(__dirname, '../dist/app.js')
+const cwd = process.cwd()
+const [entry, dest] = process.argv.slice(2)
+
+const ENTRY = path.join(cwd, entry)
+const DEST = path.join(cwd, dest)
 
 createModules(ENTRY)
 	.then(createBundle)
