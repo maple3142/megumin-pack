@@ -21,12 +21,15 @@ module.exports = class Asset {
 			sourceType: 'module'
 		})
 		this.dependencies = new Set()
-		this.addDependencides()
+		this.loadDepsList()
 	}
-	addDependencides() {
-		traverseAST(this.ast, {
+	addDep(file) {
+		this.dependencies.add(path.normalize(file))
+	}
+	loadDepsList() {
+		this.traverseAST({
 			ImportDeclaration: ({ node }) => {
-				this.dependencies.add(path.normalize(node.source.value))
+				this.addDep(node.source.value)
 			},
 			CallExpression: ({ node }) => {
 				if (
@@ -35,7 +38,7 @@ module.exports = class Asset {
 					node.arguments[0] &&
 					node.arguments[0].type === 'StringLiteral'
 				) {
-					this.dependencies.add(path.normalize(node.arguments[0].value))
+					this.addDep(node.arguments[0].value)
 				}
 			}
 		})
@@ -47,6 +50,10 @@ module.exports = class Asset {
 	}
 	compile(cfg = defcfg) {
 		this.code = transformFromAst(this.ast, null, cfg).code
+		return this
+	}
+	traverseAST(opts) {
+		traverseAST(this.ast, opts)
 		return this
 	}
 }

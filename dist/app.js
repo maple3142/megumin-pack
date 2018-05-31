@@ -1,15 +1,14 @@
-
-		(function(modules){
-			var cache={}
-			function require(id){
-				if(id in cache)return cache[id]
-				const fn=modules[id]
-				const module={exports:{}}
-				fn(require,module,module.exports)
-				return cache[id]=module.exports
-			}
-			require(0)
-		})([function(require,module,exports){"use strict";
+(function(modules){
+	var cache={}
+	function require(id){
+		if(id in cache)return cache[id]
+		const fn=modules[id]
+		const module={exports:{}}
+		fn(require,module,module.exports)
+		return cache[id]=module.exports
+	}
+	require(0)
+})([function(require,module,exports){"use strict";
 
 var _msg = require(1);
 
