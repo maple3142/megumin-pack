@@ -1,5 +1,5 @@
 module.exports = modules => {
-	const modulesCode = modules.map(mod => `function(require,module,exports){${mod.compile()}}`).join(',')
+	const modulesCode = modules.map(mod => `function(require,module,exports){${mod.compile().code}}`).join(',')
 	const code = `
 		(function(modules){
 			var cache={}

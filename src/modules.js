@@ -2,10 +2,8 @@ const path = require('path')
 const traverseAST = require('babel-traverse').default
 const Asset = require('./asset')
 
-module.exports = entry => {
-	const main = new Asset(entry)
-	main.abspath = entry
-	main.dirname = path.dirname(entry)
+module.exports = async entry => {
+	const main = await Asset.from(entry)
 
 	const depmap = new Map()
 	const queue = [main]
@@ -13,14 +11,15 @@ module.exports = entry => {
 		const dirname = path.dirname(asset.file)
 		for (const dep of asset.dependencies) {
 			const childPath = path.join(dirname, dep)
-			const child = new Asset(childPath)
-			child.abspath = childPath
-			child.dirname = path.dirname(childPath)
+			const child = await Asset.from(childPath)
 
 			depmap.set(childPath, child.id)
 			queue.push(child)
 		}
+
 		asset.transform()
+
+		// require('./xxx.js') -> require(ID)
 		traverseAST(asset.ast, {
 			CallExpression: ({ node }) => {
 				if (

@@ -1,4 +1,4 @@
-const fs = require('fs')
+const fs = require('fs-extra')
 const path = require('path')
 const babylon = require('babylon')
 const traverseAST = require('babel-traverse').default
@@ -8,16 +8,22 @@ const defcfg = require('./babelrc.json')
 let ID = 0
 
 module.exports = class Asset {
-	constructor(file) {
+	static from(file) {
+		return fs.readFile(file, 'utf-8').then(code => new Asset(file, code))
+	}
+	constructor(file, source) {
 		this.id = ID++
 		this.file = file
-		this.abspath = null
-		this.dirname = null
-		this.source = fs.readFileSync(file, 'utf-8')
+		this.dirname = path.dirname(file)
+		this.source = source
+		this.code = null
 		this.ast = babylon.parse(this.source, {
 			sourceType: 'module'
 		})
 		this.dependencies = new Set()
+		this.addDependencides()
+	}
+	addDependencides() {
 		traverseAST(this.ast, {
 			ImportDeclaration: ({ node }) => {
 				this.dependencies.add(path.normalize(node.source.value))
@@ -33,12 +39,14 @@ module.exports = class Asset {
 				}
 			}
 		})
-		this.code = null
+		return this
 	}
 	transform(cfg = defcfg) {
 		this.ast = transformFromAst(this.ast, null, cfg).ast
+		return this
 	}
 	compile(cfg = defcfg) {
-		return this.code || (this.code = transformFromAst(this.ast, null, cfg).code)
+		this.code = transformFromAst(this.ast, null, cfg).code
+		return this
 	}
 }
