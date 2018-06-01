@@ -1,5 +1,7 @@
 # megumin-pack
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/maple3142/megumin-pack.svg)](https://greenkeeper.io/)
+
 A really small javascript bundler **for practice**. Inspired by [ronami/minipack](https://github.com/ronami/minipack).
 
 ## Differences between megumin-pack and minipack
